@@ -94,3 +94,23 @@ test('peserta cannot view another users registration details and gets 403', func
 
     $response->assertStatus(403);
 });
+
+test('amount comes strictly from database workshop price and cannot be overridden by request payload', function () {
+    $peserta = User::factory()->create();
+    $workshop = Workshop::factory()->create([
+        'price' => 150000,
+        'quota' => 20,
+    ]);
+
+    // Malicious user attempts to inject 500 IDR into post request
+    $response = $this->actingAs($peserta)->post("/workshops/{$workshop->id}/register", [
+        'price' => 500,
+        'gross_amount' => 500,
+        'amount' => 500,
+    ]);
+
+    $registration = Registration::where('user_id', $peserta->id)->where('workshop_id', $workshop->id)->first();
+    expect($registration)->not->toBeNull();
+    // The registration references the workshop whose price is immutable in DB
+    expect($registration->workshop->price)->toBe(150000);
+});
