@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\Panitia\DashboardController as PanitiaDashboardController;
 use App\Http\Controllers\Panitia\WorkshopController as PanitiaWorkshopController;
 use App\Http\Controllers\ProfileController;
@@ -10,14 +11,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PublicWorkshopController::class, 'index'])->name('home');
 Route::get('/workshops/{slug}', [PublicWorkshopController::class, 'show'])->name('workshops.show');
 
+// Midtrans Webhook Notification (CSRF-exempt)
+Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification'])->name('midtrans.notification');
+
 Route::middleware('auth')->group(function () {
     Route::post('/workshops/{workshop}/register', [RegistrationController::class, 'store'])->name('workshops.register');
     Route::get('/my-registrations', [RegistrationController::class, 'myRegistrations'])->name('registrations.my');
     Route::get('/registrations/{registration}', [RegistrationController::class, 'show'])->name('registrations.show');
-
-    Route::post('/registrations/{registration}/check-status', function () {
-        return back();
-    })->name('registrations.check-status');
+    Route::post('/registrations/{registration}/check-status', [MidtransController::class, 'checkStatus'])->name('registrations.check-status');
 
     Route::get('/tickets/{registration}', function () {
         return view('dashboard');
