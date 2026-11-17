@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\Panitia\DashboardController as PanitiaDashboardController;
+use App\Http\Controllers\Panitia\RegistrationListController as PanitiaRegistrationListController;
 use App\Http\Controllers\Panitia\WorkshopController as PanitiaWorkshopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicWorkshopController;
@@ -27,10 +28,7 @@ Route::middleware(['auth', 'role:panitia'])->prefix('panitia')->name('panitia.')
     Route::get('/', [PanitiaDashboardController::class, 'index'])->name('dashboard');
     Route::get('/workshops/{workshop}/registrants', [PanitiaWorkshopController::class, 'registrants'])->name('workshops.registrants');
     Route::resource('workshops', PanitiaWorkshopController::class);
-
-    Route::get('/registrations', function () {
-        return view('dashboard');
-    })->name('registrations.index');
+    Route::get('/registrations', [PanitiaRegistrationListController::class, 'index'])->name('registrations.index');
 });
 
 Route::get('/dashboard', function () {
