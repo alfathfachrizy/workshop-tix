@@ -4,23 +4,16 @@ use App\Http\Controllers\Panitia\DashboardController as PanitiaDashboardControll
 use App\Http\Controllers\Panitia\WorkshopController as PanitiaWorkshopController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicWorkshopController;
+use App\Http\Controllers\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicWorkshopController::class, 'index'])->name('home');
 Route::get('/workshops/{slug}', [PublicWorkshopController::class, 'show'])->name('workshops.show');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/workshops/{workshop}/register', function () {
-        return back();
-    })->name('workshops.register');
-
-    Route::get('/my-registrations', function () {
-        return view('dashboard');
-    })->name('registrations.my');
-
-    Route::get('/registrations/{registration}', function () {
-        return view('dashboard');
-    })->name('registrations.show');
+    Route::post('/workshops/{workshop}/register', [RegistrationController::class, 'store'])->name('workshops.register');
+    Route::get('/my-registrations', [RegistrationController::class, 'myRegistrations'])->name('registrations.my');
+    Route::get('/registrations/{registration}', [RegistrationController::class, 'show'])->name('registrations.show');
 
     Route::post('/registrations/{registration}/check-status', function () {
         return back();
