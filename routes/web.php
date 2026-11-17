@@ -11,12 +11,32 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-registrations', function () {
         return view('dashboard');
     })->name('registrations.my');
+
+    Route::get('/registrations/{registration}', function () {
+        return view('dashboard');
+    })->name('registrations.show');
+
+    Route::post('/registrations/{registration}/check-status', function () {
+        return back();
+    })->name('registrations.check-status');
+
+    Route::get('/tickets/{registration}', function () {
+        return view('dashboard');
+    })->name('tickets.show');
 });
 
-Route::middleware(['auth'])->prefix('panitia')->name('panitia.')->group(function () {
+Route::middleware(['auth', 'role:panitia'])->prefix('panitia')->name('panitia.')->group(function () {
     Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
+
+    Route::get('/workshops', function () {
+        return view('dashboard');
+    })->name('workshops.index');
+
+    Route::get('/registrations', function () {
+        return view('dashboard');
+    })->name('registrations.index');
 });
 
 Route::get('/dashboard', function () {
