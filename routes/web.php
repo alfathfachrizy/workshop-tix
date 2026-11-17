@@ -1,13 +1,19 @@
 <?php
 
+use App\Http\Controllers\Panitia\DashboardController as PanitiaDashboardController;
+use App\Http\Controllers\Panitia\WorkshopController as PanitiaWorkshopController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicWorkshopController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [PublicWorkshopController::class, 'index'])->name('home');
+Route::get('/workshops/{slug}', [PublicWorkshopController::class, 'show'])->name('workshops.show');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/workshops/{workshop}/register', function () {
+        return back();
+    })->name('workshops.register');
+
     Route::get('/my-registrations', function () {
         return view('dashboard');
     })->name('registrations.my');
@@ -26,13 +32,9 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:panitia'])->prefix('panitia')->name('panitia.')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    Route::get('/workshops', function () {
-        return view('dashboard');
-    })->name('workshops.index');
+    Route::get('/', [PanitiaDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/workshops/{workshop}/registrants', [PanitiaWorkshopController::class, 'registrants'])->name('workshops.registrants');
+    Route::resource('workshops', PanitiaWorkshopController::class);
 
     Route::get('/registrations', function () {
         return view('dashboard');
