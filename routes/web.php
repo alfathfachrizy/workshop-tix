@@ -6,6 +6,7 @@ use App\Http\Controllers\Panitia\WorkshopController as PanitiaWorkshopController
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicWorkshopController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicWorkshopController::class, 'index'])->name('home');
@@ -19,10 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-registrations', [RegistrationController::class, 'myRegistrations'])->name('registrations.my');
     Route::get('/registrations/{registration}', [RegistrationController::class, 'show'])->name('registrations.show');
     Route::post('/registrations/{registration}/check-status', [MidtransController::class, 'checkStatus'])->name('registrations.check-status');
-
-    Route::get('/tickets/{registration}', function () {
-        return view('dashboard');
-    })->name('tickets.show');
+    Route::get('/tickets/{registration}', [TicketController::class, 'show'])->name('tickets.show');
 });
 
 Route::middleware(['auth', 'role:panitia'])->prefix('panitia')->name('panitia.')->group(function () {
