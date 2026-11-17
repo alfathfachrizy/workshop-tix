@@ -5,6 +5,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/my-registrations', function () {
+        return view('dashboard');
+    })->name('registrations.my');
+});
+
+Route::middleware(['auth'])->prefix('panitia')->name('panitia.')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('dashboard');
 });
 
 Route::get('/dashboard', function () {

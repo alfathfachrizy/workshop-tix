@@ -8,8 +8,8 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
-test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+test('peserta can authenticate and redirects to home', function () {
+    $user = User::factory()->create(['role' => 'peserta']);
 
     $response = $this->post('/login', [
         'email' => $user->email,
@@ -17,7 +17,19 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $response->assertRedirect(route('home'));
+});
+
+test('panitia can authenticate and redirects to panitia dashboard', function () {
+    $user = User::factory()->panitia()->create();
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('panitia.dashboard'));
 });
 
 test('users can not authenticate with invalid password', function () {
