@@ -275,3 +275,5 @@ Berikut adalah panduan area tangkapan layar untuk laporan portofolio LKPD:
 
 **SMK PESAT IT XPRO • Rekayasa Perangkat Lunak (RPL)**  
 *LKPD XI RPL — WorkshopTIX Project*
+#   w o r k s h o p - t i x  
+ # workshop-tix
